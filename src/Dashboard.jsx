@@ -1,10 +1,11 @@
-// src/Dashboard.jsx-06/18/2025
+// src/Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { db, ref, onValue } from './firebase-user'; // use user DB only for loginLogs
 import { auth } from './firebase'; // admin project's auth only
 import { signOut } from 'firebase/auth';
 import Papa from 'papaparse';
 import AdminProfile from './components/AdminProfile';
+import { Link } from 'react-router-dom'; // Link component එක import කරන්න
 
 export default function Dashboard({ user }) { // App.js වෙතින් user prop එක ලබා ගන්න
   const [logs, setLogs] = useState([]);
@@ -75,6 +76,11 @@ export default function Dashboard({ user }) { // App.js වෙතින් user 
         <div>
           {/* user prop එක AdminProfile වෙත යවමු */}
           <AdminProfile user={user} />
+
+          {/* නව Edit Profile බොත්තම */}
+          <Link to="/profile-details" className="block w-full mt-4 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded text-center">
+            ⚙️ Edit Profile
+          </Link>
         </div>
         <div className="mt-4 space-y-2">
           {/* ඔබට අවශ්‍ය එකම Logout බොත්තම මෙයයි */}

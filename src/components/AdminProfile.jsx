@@ -1,32 +1,43 @@
-// src/components/AdminProfile.jsx
-import React from 'react';
-// Firebase auth මෙහිදී අවශ්‍ය නැත, මන්ද logout බොත්තම ඉවත් කර ඇත.
-// import { getAuth, signOut } from 'firebase/auth'; 
+// src/components/AdminProfile.jsx-06/18/2025
+import React, { useState, useEffect } from 'react';
+import { getDatabase, ref, onValue } from 'firebase/database'; // Firebase database imports
 
-export default function AdminProfile({ user }) { // Dashboard වෙතින් user prop එක ලබා ගන්න
-  // const auth = getAuth(); // මෙහිදී auth direct අවශ්‍ය නැත
-  // const user = auth.currentUser; // user prop එක ලෙස ලැබෙන නිසා මෙහිදී direct Firebase Auth අවශ්‍ය නැත.
+export default function AdminProfile({ user }) { // Get user prop from Dashboard
+  const db = getDatabase();
+  const [profileName, setProfileName] = useState(user?.displayName || 'N/A');
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(user?.photoURL || 'https://www.gravatar.com/avatar/?d=mp');
+  const [profileEmail, setProfileEmail] = useState(user?.email || 'N/A');
 
-  // user prop එකෙන් දත්ත ලබා ගන්න
-  const name = user?.displayName || 'N/A';
-  const email = user?.email || 'N/A';
-  const photoURL = user?.photoURL || 'https://www.gravatar.com/avatar/?d=mp';
+  const isAdmin = profileEmail === "aquaticresearch.fmst@gmail.com"; // Change this to your Admin Email
 
-  const isAdmin = email === "lishani@fmst.ac.lk";
-
-  // Logout බොත්තම ඉවත් කළ නිසා handleLogout ශ්‍රිතය ද ඉවත් කර ඇත.
-  // const handleLogout = () => {
-  //   signOut(auth).then(() => {
-  //     window.location.reload();
-  //   });
-  // };
+  useEffect(() => {
+    if (user) {
+      const userProfileRef = ref(db, `adminProfiles/${user.uid}`);
+      const unsubscribe = onValue(userProfileRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // If custom data exists, use that. Otherwise, fall back to Google's data.
+          setProfileName(data.name || user.displayName || 'N/A');
+          // Get profilePicUrl from Firebase DB or Google photoURL
+          setProfilePhotoUrl(data.profilePicUrl || user.photoURL || 'https://www.gravatar.com/avatar/?d=mp');
+          // Email is taken from Firebase Auth, no change needed.
+          setProfileEmail(user.email || 'N/A');
+        } else {
+          // If no custom profile data, just use Google's default.
+          setProfileName(user.displayName || 'N/A');
+          setProfilePhotoUrl(user.photoURL || 'https://www.gravatar.com/avatar/?d=mp');
+          setProfileEmail(user.email || 'N/A');
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, [user, db]);
 
   return (
-    // AdminProfile හි පසුබිම වෙනස් කිරීම අවශ්‍ය නැත, මන්ද Sidebar එකේ පසුබිම වෙනස් කරමු.
     <div className="bg-white rounded-xl shadow-md p-6 max-w-md mx-auto font-sans dark:bg-gray-800 dark:text-white">
       <div className="flex items-center mb-4">
         <img
-          src={photoURL}
+          src={profilePhotoUrl} // Uses Google photo URL or custom URL
           alt="Profile"
           className="w-16 h-16 rounded-full mr-4 border border-gray-300"
         />
@@ -41,24 +52,14 @@ export default function AdminProfile({ user }) { // Dashboard වෙතින්
       </div>
 
       <div className="mb-2">
-        <span className="font-semibold">Name:</span> {name}
+        <span className="font-semibold">Name:</span> {profileName}
       </div>
-      <div className="mb-2 text-xs"> {/* text-xs class එක එකතු කර ඇත. */}
-        <span className="font-semibold">Email:</span> {email}
+      <div className="mb-2 text-xs">
+        <span className="font-semibold">Email:</span> {profileEmail}
       </div>
       <div className="text-sm text-gray-500 mt-4 dark:text-gray-400">
         Logged in: {new Date().toLocaleString()}
       </div>
-
-      {/* Logout බොත්තම මෙතනින් ඉවත් කර ඇත. */}
-      {/*
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow"
-      >
-        🔓 Logout
-      </button>
-      */}
     </div>
   );
 }
