@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/aquaticresearch-fmst-Aquatic_product-firebase-dashbard/static/css/main.7670ac09.css",
-    "main.js": "/aquaticresearch-fmst-Aquatic_product-firebase-dashbard/static/js/main.2af50e60.js",
-    "index.html": "/aquaticresearch-fmst-Aquatic_product-firebase-dashbard/index.html",
-    "main.7670ac09.css.map": "/aquaticresearch-fmst-Aquatic_product-firebase-dashbard/static/css/main.7670ac09.css.map",
-    "main.2af50e60.js.map": "/aquaticresearch-fmst-Aquatic_product-firebase-dashbard/static/js/main.2af50e60.js.map"
+    "main.css": "/static/css/main.7670ac09.css",
+    "main.js": "/static/js/main.067a524d.js",
+    "index.html": "/index.html",
+    "main.7670ac09.css.map": "/static/css/main.7670ac09.css.map",
+    "main.067a524d.js.map": "/static/js/main.067a524d.js.map"
   },
   "entrypoints": [
     "static/css/main.7670ac09.css",
-    "static/js/main.2af50e60.js"
+    "static/js/main.067a524d.js"
   ]
 }
