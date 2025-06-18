@@ -1,17 +1,17 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue } from "firebase/database";
+// firebase.js
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBEDoYtoM1YXQnvCORY66Khpf2rKQLQM_U",
-  authDomain: "project-algazeya.firebaseapp.com",
-  databaseURL: "https://project-algazeya-default-rtdb.firebaseio.com",
-  projectId: "project-algazeya",
-  storageBucket: "project-algazeya.appspot.com",
-  messagingSenderId: "154081783522",
-  appId: "1:154081783522:web:aef31af390e6c2ae6b78bb"
+  apiKey: "AIzaSyBH852WDX-8FLPTiHhDHwuA-SYIzPjadaA",
+  authDomain: "project-alcazar--admin.firebaseapp.com",
+  projectId: "project-alcazar--admin",
+  storageBucket: "project-alcazar--admin.firebasestorage.app",
+  messagingSenderId: "699760824052",
+  appId: "1:699760824052:web:646797ef2442cdd7b458a1"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const auth = getAuth(app);
 
-export { db, ref, onValue };
+export { auth };

@@ -1,12 +1,16 @@
 // src/Dashboard.jsx
 import React, { useEffect, useState } from 'react';
-import { db, ref, onValue } from './firebase';
+import { db, ref, onValue } from './firebase-user'; // use user DB only for loginLogs
+import { auth } from './firebase'; // admin project's auth only
+import { signOut } from 'firebase/auth'; // use signOut only once
 import Papa from 'papaparse';
+import AdminProfile from './components/AdminProfile';
 
 export default function Dashboard() {
   const [logs, setLogs] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [productFilter, setProductFilter] = useState('All');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const logsRef = ref(db, "loginLogs");
@@ -27,6 +31,10 @@ export default function Dashboard() {
     else setFiltered(logs.filter(log => log.product === productFilter));
   }, [productFilter, logs]);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
   const exportCSV = () => {
     const csv = Papa.unparse(filtered);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -39,62 +47,81 @@ export default function Dashboard() {
     document.body.removeChild(link);
   };
 
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
   return (
-    <div style={{ padding: '20px', fontFamily: 'Segoe UI' }}>
-      <h2 style={{ color: '#003366' }}>🔐 Login Records</h2>
-
-      {/* Filter Dropdown */}
-      <div style={{ marginBottom: '15px' }}>
-        <label><strong>Filter by Product: </strong></label>
-        <select
-          onChange={(e) => setProductFilter(e.target.value)}
-          style={{ padding: '6px 12px', marginLeft: '10px', borderRadius: '6px' }}
-        >
-          <option value="All">All</option>
-          {[...Array(15)].map((_, i) => (
-            <option key={i + 1} value={`Product ${i + 1}`}>{`Product ${i + 1}`}</option>
-          ))}
-        </select>
-
-        {/* Export Button */}
-        <button
-          onClick={exportCSV}
-          style={{ marginLeft: '20px', padding: '6px 16px', backgroundColor: '#007BFF', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-        >
-          📤 Export CSV
-        </button>
+    <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Sidebar */}
+      <div className="w-64 bg-white dark:bg-gray-800 shadow-lg flex flex-col justify-between p-4">
+        <div>
+          <AdminProfile />
+        </div>
+        <div className="mt-4 space-y-2">
+          <button
+            onClick={handleLogout}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+          >
+            🔓 Logout
+          </button>
+          <button
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          >
+            {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+          </button>
+        </div>
       </div>
 
-      {/* Table */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', background: '#f9f9f9' }}>
-        <thead>
-          <tr style={{ background: '#003366', color: 'white' }}>
-            <th style={th}>Product</th>
-            <th style={th}>Name</th>
-            <th style={th}>Email</th>
-            <th style={th}>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((log) => (
-            <tr key={log.id} style={{ borderBottom: '1px solid #ccc' }}>
-              <td style={td}>{log.product}</td>
-              <td style={td}>{log.name}</td>
-              <td style={td}>{log.email}</td>
-              <td style={td}>{new Date(log.time).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Main content area */}
+      <div className="flex-1 p-6">
+        <h2 className="text-2xl font-bold text-blue-900 dark:text-white mb-4">🔐 Login Records</h2>
+
+        {/* Filter & Export */}
+        <div className="mb-4">
+          <label className="font-semibold">Filter by Product:</label>
+          <select
+            onChange={(e) => setProductFilter(e.target.value)}
+            className="ml-2 px-3 py-1 rounded border"
+          >
+            <option value="All">All</option>
+            {[...Array(15)].map((_, i) => (
+              <option key={i + 1} value={`Product ${i + 1}`}>{`Product ${i + 1}`}</option>
+            ))}
+          </select>
+          <button
+            onClick={exportCSV}
+            className="ml-4 bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+          >
+            📤 Export CSV
+          </button>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-auto">
+          <table className="min-w-full bg-white dark:bg-gray-800 rounded-md overflow-hidden">
+            <thead>
+              <tr className="bg-blue-900 text-white">
+                <th className="py-2 px-4 text-left">Product</th>
+                <th className="py-2 px-4 text-left">Name</th>
+                <th className="py-2 px-4 text-left">Email</th>
+                <th className="py-2 px-4 text-left">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((log) => (
+                <tr key={log.id} className="border-b border-gray-300 dark:border-gray-600">
+                  <td className="py-2 px-4">{log.product}</td>
+                  <td className="py-2 px-4">{log.name}</td>
+                  <td className="py-2 px-4">{log.email}</td>
+                  <td className="py-2 px-4">{new Date(log.time).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
-
-const th = {
-  padding: '10px',
-  textAlign: 'left'
-};
-
-const td = {
-  padding: '10px'
-};
