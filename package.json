@@ -1,7 +1,6 @@
 {
   "name": "firebase-dashboard",
   "version": "1.0.0",
-  "homepage": "https://aquaticresearch-fmst.io/aquaticresearch-fmst-Aquatic_product-firebase-dashbard",
   "private": true,
   "dependencies": {
     "firebase": "^9.6.10",
