@@ -1,0 +1,84 @@
+/* src/RequestDetailsPage.css */
+
+.request-details-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9fafb; /* Light gray background for light mode */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .request-details-container {
+  background-color: #1f2937; /* Darker gray for dark mode */
+  color: #e5e7eb; /* Light text for dark mode */
+}
+
+.details-card {
+  background-color: #ffffff; /* White background for light mode */
+}
+
+.dark .details-card {
+  background-color: #374151; /* Even darker gray for dark mode cards */
+}
+
+.details-card p {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb; /* Light border for light mode */
+}
+
+.dark .details-card p {
+  border-bottom: 1px solid #4b5563; /* Darker border for dark mode */
+}
+
+.details-card p:last-child {
+  border-bottom: none;
+}
+
+.details-card span.font-semibold {
+  min-width: 150px; /* ලේබල් සඳහා ස්ථාවර පළලක් ලබා දීම */
+  display: inline-block;
+  color: #1f2937; /* Dark text for light mode labels */
+}
+
+.dark .details-card span.font-semibold {
+  color: #d1d5db; /* Lighter text for dark mode labels */
+}
+
+
+/* Status Update Section */
+.status-update-section {
+  background-color: #ffffff; /* White background for light mode */
+}
+
+.dark .status-update-section {
+  background-color: #374151; /* Darker gray for dark mode */
+}
+
+.status-update-section h2 {
+  color: #1e40af; /* Blue text for light mode */
+}
+
+.dark .status-update-section h2 {
+  color: #93c5fd; /* Lighter blue text for dark mode */
+}
+
+.status-update-section select,
+.status-update-section button {
+  /* Tailwind classes will override some of these */
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.status-update-section select {
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.dark .status-update-section select {
+  border: 1px solid #4b5563;
+  background-color: #4b5563;
+  color: #e5e7eb;
+}
