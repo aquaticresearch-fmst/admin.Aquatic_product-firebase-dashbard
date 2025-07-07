@@ -1,4 +1,4 @@
-// src/App.js
+// src/App.js-07/07/2025
 import React, { useState, useEffect } from 'react';
 // ⛔️ එකතු කරන ලදි: React Router DOM වෙතින් අවශ්‍ය components
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
